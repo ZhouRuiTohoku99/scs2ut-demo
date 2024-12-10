@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Speech to Speech Translation with Speaker Voice Preservation Demo - Translation Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .image-section {
+        display: flex; /* Enables flexbox layout */
+        justify-content: center; /* Centers the images horizontally */
+        align-items: center; /* Aligns the images to the top */
+        gap: 20px; /* Adds space between images */
+        margin-top: 20px;
+        }
+
+        .image-container {
+            display: flex;
+            flex-direction: column; /* Stack image and text vertically */
+            align-items: center; /* Center images and captions horizontally */
+            text-align: center;
+            flex: 1; /* Ensure both containers take equal width */
+        }
+
+        .image-container img {
+            width: 100%; /* Images take full width of the container */
+            height: auto; /* Maintains the aspect ratio */
+        }
+
+        .image-container p {
+            margin-top: 10px; /* Adds spacing between image and text */
+            font-weight: bold; /* Highlights the caption */
+            text-align: center; /* Centers the caption */
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        h2 {
+            color: #4caf50;
+            margin-bottom: 20px;
+        }
+        h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        ul {
+            font-size: 1.2em;
+            list-style-type: disc;
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        ul li {
+            margin-bottom: 10px;
+        }
+        p {
+            line-height: 1.6;
+            color: #666;
+        }
+        a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        audio {
+            width: 100%;
+        }
+        td:first-child {
+            font-family: 'Arial', sans-serif; /* 字体 */
+            font-size: 16px; /* 字体大小 */
+            font-weight: bold; /* 加粗 */
+            color: #4a565e; /* 字体颜色 */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Preserving Speaker Information in Direct Speech-to-Speech Translation with Non-Autoregressive Generation and Pretraining</h1>
+
+        <p>
+            Speech-to-Speech Translation (S2ST) refers to the conversion of speech in one language into semantically equivalent speech in another language, facilitating communication between speakers of different languages. Speech-to-Discrete Unit Translation (S2UT), a mainstream approach for end-to-end S2ST, addresses challenges such as error propagation across modules and slow inference speed often encountered in traditional cascade systems. However, as discrete units primarily capture content information, conventional S2UT methods fail to retain speaker-specific characteristics from the source.
+
+            Our previous work, SC-S2UT, introduced a speaker adapter and a unit-to-mel structure, enabling the preservation of speaker information and non-autoregressive speech generation. Building on this foundation, this study proposes a self-supervised pretraining method to enrich the information extracted by both the speaker adapter and the unit-to-mel structure. Additionally, we investigate different feature fusion strategies to further improve the integration of speaker and content features.
+
+            Experiments conducted on the CVSS-T dataset for ES-EN and FR-EN tasks demonstrate that our proposed method achieves a BLEU score improvement of 1.14 compared to SC-S2UT, along with significant enhancements in MOS and speaker similarity. Furthermore, our approach achieves translation quality comparable to traditional S2UT, with only a minimal increase of 0.04s per utterance in inference time, while maintaining high speaker similarity. These results validate the effectiveness of the proposed method.
+        </p>
+        
+        <h3>
+            System structure and Method
+        </h3>
+
+        <div class="image-section">
+            <div class="image-container">
+                <img src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/figure/structure.png" alt="SC-S2UT System Workflow Overview" style="width:100%;max-width:400px;">
+                <p>Figure 1: Speaker Retention Unit-to-Mel based Speaker Consistency S2UT System Workflow Overview </p>
+            </div>
+            <div class="image-container">
+                <img src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/figure/pretrain.png" alt="Self-Supervised Pretrain and Finetune" style="width:100%;max-width:700px;" >
+                <p>Figure 2: Illustration of the workflow for the Self-Supervised Pretrain and Finetune</p>
+            </div>
+        </div>
+
+        <ul>
+            <li>Translation Results
+                <ul>
+                    <li><a href="#fr-en">Fr-En</a></li>
+                    <li><a href="#es-en">Es-En</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        <!-- Fr-En Section -->
+        <h2 id="fr-en">Fr-En Translation Results</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th rowspan="2">Sample</th>
+                    <th colspan="2">Ground Truth</th>
+                    <th colspan="5">Translation</th>
+                </tr>
+                <tr>
+                    <th>Source (French)</th>
+                    <th>Target (English)</th>
+                    <th>S2ST</th>
+                    <th>SC_S2ST</th>
+                    <th>Pretrain_SC_S2ST</th>
+                    <th>ASR+MT+TTS</th>
+                    <th>S2UT+FreeVC</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Sample1</td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample1/common_voice_fr_19044270_src.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample1/common_voice_fr_19044270_cvsst.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample1/common_voice_fr_19044270_s2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample1/common_voice_fr_19044270_scs2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample1/common_voice_fr_19044270_pretrain.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample1/common_voice_fr_19044270_asrmttts.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample1/common_voice_fr_19044270_freevc.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Reference</td>
+                    <td>
+                        Cette maladie est assez fréquente pour se voir régulièrement en médecine générale
+                    </td>
+                    <td>
+                        this sickness is frequent enough to be seen regularly in general medicine
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>ASR</td>
+                    <td>
+                    </td>
+                    <td>
+                        this sickness is frequent enough to be seen regularly in general medicine
+                    </td>
+                    <td>
+                        his disease is quite frequent to resume a general medicine
+                    </td>
+                    <td>
+                        this disease is quite frequent to resume a general medicine
+                    </td>
+                    <td>
+                        this disease is quite frequent to resume a general medicine
+                    </td>
+                    <td>
+                        his disease is common enough to be relegated to general medicine
+                    </td>
+                    <td>
+                        this disease is quite frequent to resume a general medicine
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Sample2</td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample2/common_voice_fr_19128455_src.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample2/common_voice_fr_19128455_cvsst.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample2/common_voice_fr_19128455_s2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample2/common_voice_fr_19128455_scs2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample2/common_voice_fr_19128455_pretrain.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample2/common_voice_fr_19128455_asrmttts.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample2/common_voice_fr_19128455_freevc.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Reference</td>
+                    <td>
+                        Comme ces structures, les avasa étaient établis en dehors de la ville
+                    </td>
+                    <td>
+                        like these structures the avasa were settled outside the city
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>ASR</td>
+                    <td>
+                    </td>
+                    <td>
+                        like these structures the avaso were settled outside the city
+                    </td>
+                    <td>
+                        like his lectures a basa was established in the city
+                    </td>
+                    <td>
+                        like his structures a buzz that was established in this city
+                    </td>
+                    <td>
+                        like this structures a basa was established in the city
+                    </td>
+                    <td>
+                        as these ruptures the abysses were established outside a city
+                    </td>
+                    <td>
+                        like his lectures a bass on was established in the city
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Sample3</td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample3/common_voice_fr_19684941_src.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample3/common_voice_fr_19684941_cvsst.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample3/common_voice_fr_19684941_s2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample3/common_voice_fr_19684941_scs2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample3/common_voice_fr_19684941_pretrain.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample3/common_voice_fr_19684941_asrmttts.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample3/common_voice_fr_19684941_freevc.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Reference</td>
+                    <td>
+                        À cette époque, seules les parties ouest et nord faisaient partie du comté
+                    </td>
+                    <td>
+                        at that time only the western and northern parts were included in the county
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>ASR</td>
+                    <td>
+                    </td>
+                    <td>
+                        at that time only the western and northern parts were included in the county
+                    </td>
+                    <td>
+                        at that time only the west and northern parts were part of the county
+                    </td>
+                    <td>
+                        at that time only the western northern parts were part of the county
+                    </td>
+                    <td>
+                        at that time only the western northern parts were part of the county
+                    </td>
+                    <td>
+                        at that time only the western and northern parts were part of the county
+                    </td>
+                    <td>
+                        at that time only the western northern parts were part of the county
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Sample4</td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample4/common_voice_fr_20035223_src.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample4/common_voice_fr_20035223_cvsst.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample4/common_voice_fr_20035223_s2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample4/common_voice_fr_20035223_scs2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample4/common_voice_fr_20035223_pretrain.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample4/common_voice_fr_20035223_asrmttts.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample4/common_voice_fr_20035223_freevc.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Reference</td>
+                    <td>
+                        Il est rapatrié le et reprend son métier d'instituteur
+                    </td>
+                    <td>
+                        he is repatriated and resumes his profession as a schoolteacher
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>ASR</td>
+                    <td>
+                    </td>
+                    <td>
+                        he is repaciated and resumes his profession as a school teacher
+                    </td>
+                    <td>
+                        he was repaidriate and takes his institutor
+                    </td>
+                    <td>
+                        he was repatriot and takes his instituta
+                    </td>
+                    <td>
+                        he was repayed and takes his instituta
+                    </td>
+                    <td>
+                        he is repetriate and takes up his job as a teacher
+                    </td>
+                    <td>
+                        he was repaidriate and takes his institutor
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Sample5</td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample5/common_voice_fr_18787093_src.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample5/common_voice_fr_18787093_cvsst.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample5/common_voice_fr_18787093_s2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample5/common_voice_fr_18787093_scs2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample5/common_voice_fr_18787093_pretrain.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample5/common_voice_fr_18787093_asrmttts.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/fr-en/sample5/common_voice_fr_18787093_freevc.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Reference</td>
+                    <td>
+                        Ce sentiment règne en moi, malgré moi.
+                    </td>
+                    <td>
+                        this feeling reigns in me despite myself
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>ASR</td>
+                    <td>
+                    </td>
+                    <td>
+                        this feeling reigns in me despite myself
+                    </td>
+                    <td>
+                        his feeling rain and mess despite to me
+                    </td>
+                    <td>
+                        this feeling rain and mess despite me
+                    </td>
+                    <td>
+                        this feeling rain and mess despite me
+                    </td>
+                    <td>
+                        dealing rains in me in spite of me
+                    </td>
+                    <td>
+                        his feeling rain and beasts despite to me
+                    </td>
+                </tr>
+
+
+            </tbody>
+        </table>
+
+        <!-- ES-En Section -->
+        <h2 id="es-en">Es-En Translation Results</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th rowspan="2">Sample</th>
+                    <th colspan="2">Ground Truth</th>
+                    <th colspan="5">Translation</th>
+                </tr>
+                <tr>
+                    <th>Source (Spanish)</th>
+                    <th>Target (English)</th>
+                    <th>S2ST</th>
+                    <th>SC_S2ST</th>
+                    <th>Pretrain_SC_S2ST</th>
+                    <th>ASR+MT+TTS</th>
+                    <th>S2UT+FreeVC</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Sample1</td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample1/common_voice_es_19626702_src.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample1/common_voice_es_19626702_cvsst.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample1/common_voice_es_19626702_s2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample1/common_voice_es_19626702_scs2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample1/common_voice_es_19626702_pretrain.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample1/common_voice_es_19626702_asrmttts.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample1/common_voice_es_19626702_freevc.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Reference</td>
+                    <td>
+                        El estilo original de la catedral se conserva sobre todo en su fachada principal
+                    </td>
+                    <td>
+                        the original style of the cathedral is preserved above all in its main facade
+                    </td>
+                    <td>
+    
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>ASR</td>
+                    <td>
+                    </td>
+                    <td>
+                        the original style of the cathedral is preserved above all in its main foresawed
+                    </td>
+                    <td>
+                        the original style of the cathedral kept on his main facade
+                    </td>
+                    <td>
+                        the original style of the cathedral kept on his main for sud
+                    </td>
+                    <td>
+                        the original style of the cathedral kept on his main facade
+                    </td>
+                    <td>
+                        the original style of the cathedral is preserved above all in its main for sale
+                    </td>
+                    <td>
+                        the original style of the cathedral kept on his main facade
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Sample2</td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample2/common_voice_es_19635295_src.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample2/common_voice_es_19635295_cvsst.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample2/common_voice_es_19635295_s2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample2/common_voice_es_19635295_scs2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample2/common_voice_es_19635295_pretrain.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample2/common_voice_es_19635295_asrmttts.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample2/common_voice_es_19635295_freevc.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Reference</td>
+                    <td>
+                        No posee un olor intenso y su textura es húmeda
+                    </td>
+                    <td>
+                        it does not possess an intense smell and its texture is humid
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>ASR</td>
+                    <td>
+                    </td>
+                    <td>
+                        it does not possess an intense smell and its texture is humid
+                    </td>
+                    <td>
+                        it does not have an intense olar and its texture is human
+                    </td>
+                    <td>
+                        it does not have an intense solar and its texture is human
+                    </td>
+                    <td>
+                        it does not have an intense solar and its texture is human
+                    </td>
+                    <td>
+                        does not have an intense smell and its texture is moist
+                    </td>
+                    <td>
+                        it does not have an intense olor in its texture as human
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Sample3</td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample3/common_voice_es_19637767_src.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample3/common_voice_es_19637767_cvsst.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample3/common_voice_es_19637767_s2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample3/common_voice_es_19637767_scs2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample3/common_voice_es_19637767_pretrain.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample3/common_voice_es_19637767_asrmttts.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample3/common_voice_es_19637767_freevc.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Reference</td>
+                    <td>
+                        Buena parte de sus miembros son católicos tradicionalistas
+                    </td>
+                    <td>
+                        a big part of its members are traditionalist catholics
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>ASR</td>
+                    <td>
+                    </td>
+                    <td>
+                        a big part of its members are traditionalist catholics
+                    </td>
+                    <td>
+                        a good part of his members or traditionalist catholics
+                    </td>
+                    <td>
+                        a good part of his members are traditionalist catholics
+                    </td>
+                    <td>
+                        a good part of his members are traditionalist catholics
+                    </td>
+                    <td>
+                        many of its members are traditionalist catholics
+                    </td>
+                    <td>
+                        a good part of his members or traditionalist catholics
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Sample4</td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample4/common_voice_es_19640635_src.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample4/common_voice_es_19640635_cvsst.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample4/common_voice_es_19640635_s2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample4/common_voice_es_19640635_scs2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample4/common_voice_es_19640635_pretrain.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample4/common_voice_es_19640635_asrmttts.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample4/common_voice_es_19640635_freevc.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Reference</td>
+                    <td>
+                        El campeonato está dividido en dos, torneos Apertura y Clausura
+                    </td>
+                    <td>
+                        the championship is divided in two opening and closing tournaments
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>ASR</td>
+                    <td>
+                    </td>
+                    <td>
+                        the championship is divided in two opening and closing tournaments
+                    </td>
+                    <td>
+                        the championship is divided into two tournaments opening in closure
+                    </td>
+                    <td>
+                        the championship is divided into two termediments opening inclosure
+                    </td>
+                    <td>
+                        the championship is divided into two terminments opening inclosure
+                    </td>
+                    <td>
+                        the championship is divided into two opening and closing tournaments
+                    </td>
+                    <td>
+                        the championship is divided into two tournaments opening inclosure
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Sample5</td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample5/common_voice_es_19744366_src.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample5/common_voice_es_19744366_cvsst.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample5/common_voice_es_19744366_s2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample5/common_voice_es_19744366_scs2ut.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample5/common_voice_es_19744366_pretrain.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample5/common_voice_es_19744366_asrmttts.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+                    <td>
+                        <audio controls>
+                            <source src="/Users/zhou/Desktop/学习关联/博士二年级/论文发表/voice_preservation/demo/waveform/es-en/sample5/common_voice_es_19744366_freevc.wav" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </td>
+
+
+                </tr>
+                <tr>
+                    <td>Reference</td>
+                    <td>
+                        Murieron seiscientos civiles y cuarenta soldados alemanes
+                    </td>
+                    <td>
+                        six hundred civilians and forty german soldiers died
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>ASR</td>
+                    <td>
+                    </td>
+                    <td>
+                        six hundred civilians and forty german soldiers died
+                    </td>
+                    <td>
+                        they dined in six hundred sibils and forty soldiers
+                    </td>
+                    <td>
+                        they died in six hundred civils and forty soldiers
+                    </td>
+                    <td>
+                        they died in six hundred sibils and forty soldiers
+                    </td>
+                    <td>
+                        six hundred civilians and four deedsmen soldiers were killed
+                    </td>
+                    <td>
+                        they dine in six hundred civils and forty soldiers
+                    </td>
+                </tr>
+
+
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
